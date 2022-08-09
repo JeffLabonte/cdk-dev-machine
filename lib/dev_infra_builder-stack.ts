@@ -34,11 +34,11 @@ export class DevInfraBuilderStack extends Stack {
       allowAllOutbound: true,
     });
 
-    devMachineSG.addIngressRule(
-      Peer.anyIpv4(),
-      Port.tcp(22),
-      'Allow SSH access from anywhere',
-    );
+    //devMachineSG.addIngressRule(
+    //  Peer.anyIpv4(),
+    //  Port.tcp(22),
+    //  'Allow SSH access from anywhere',
+    //);
   
     const devMachineRole = new Role(this, 'dev-machine-role', {
       assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
@@ -56,7 +56,7 @@ export class DevInfraBuilderStack extends Stack {
       securityGroup: devMachineSG,
       instanceType: InstanceType.of(
         InstanceClass.BURSTABLE2,
-        InstanceSize.SMALL,
+        InstanceSize.MEDIUM,
       ),
       machineImage: new GenericLinuxImage({
         'ca-central-1': 'ami-0b6937ac543fe96d7' 
