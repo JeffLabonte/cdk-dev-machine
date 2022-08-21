@@ -9,7 +9,6 @@ import {
   InstanceClass,
   InstanceSize,
   GenericLinuxImage,
-  BlockDevice,
   BlockDeviceVolume,
 } from 'aws-cdk-lib/aws-ec2';
 import { Role, ServicePrincipal, ManagedPolicy } from 'aws-cdk-lib/aws-iam';
@@ -34,11 +33,17 @@ export class DevInfraBuilderStack extends Stack {
       allowAllOutbound: true,
     });
 
-    //devMachineSG.addIngressRule(
-    //  Peer.anyIpv4(),
-    //  Port.tcp(22),
-    //  'Allow SSH access from anywhere',
-    //);
+    devMachineSG.addIngressRule(
+      Peer.anyIpv4(),
+      Port.tcp(22),
+      'Allow SSH access from anywhere',
+    );
+
+    devMachineSG.addIngressRule(
+      Peer.anyIpv4(),
+      Port.udpRange(60000, 61000),
+      'Allow upd 60000 to 61000 for mosh',
+    )
   
     const devMachineRole = new Role(this, 'dev-machine-role', {
       assumedBy: new ServicePrincipal('ec2.amazonaws.com'),
